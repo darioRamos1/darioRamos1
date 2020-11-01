@@ -1,8 +1,14 @@
-export class Student{
+import * as mongoose from 'mongoose';
 
-    constructor(
-        public id:string,
-        public name:string,
-        public age:number,
-      ){};
+export const StudentSchema = new mongoose.Schema({
+
+  name: String,
+  age: Number
+});
+
+export interface Student extends mongoose.Document{
+
+  id:string,
+  name:string,
+  age:number,
 }
