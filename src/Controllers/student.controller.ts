@@ -7,8 +7,7 @@ export class StudentsController{
     constructor(private studentService: StudentService){}
     @Post()
     async addStudent( @Body() request:RegisterStudentRequest) {
-        const generatedId = await this.studentService.insertStudent(request);
-        return generatedId;     
+        return await this.studentService.insertStudent(request);   
     }
 
     @Get()
@@ -17,6 +16,8 @@ export class StudentsController{
         return result.map((stud)=>({
             id: stud.id, 
             name:stud.name,
+            userId:stud.userId,
+            password:stud.password,
             age:stud.age}));
     }
 
@@ -27,13 +28,13 @@ export class StudentsController{
 
     @Patch(':id')
     async updateStudent(@Param('id') studentId:string, @Body() request:UpdateStudentRequest){
-        await this.studentService.updateStudent(studentId,request);
-        return null;
+        
+        return await this.studentService.updateStudent(studentId,request);;
     }
     @Delete(':id')
     async removeStudent(@Param('id') studentId:string){
-        await this.studentService.deleteStudent(studentId);
-        return null
+        
+        return await this.studentService.deleteStudent(studentId);
     }
 
   
