@@ -6,11 +6,11 @@ import {Model} from 'mongoose'
 @Injectable()
 export class TeacherService{
 
-    constructor(@InjectModel('Teacher') private readonly seacherModel: Model<Teacher>){}
+    constructor(@InjectModel('Teacher') private readonly teacherModel: Model<Teacher>){}
 
     async insertTeacher(request:RegisterTeacherRequest): Promise<DefaultResponse>{
 
-        const newTeacher = new this.seacherModel({
+        const newTeacher = new this.teacherModel({
             name:request.name,
             userId:request.userId,
             password:request.password
@@ -36,7 +36,7 @@ export class TeacherService{
     }
     
     async getAllTeachers(){
-        const seachers = await this.seacherModel.find().exec();
+        const seachers = await this.teacherModel.find().exec();
         return seachers as Teacher[];
     }  
 
@@ -50,10 +50,10 @@ export class TeacherService{
         }
     }
 
-    private async findTeacher(userIdf:string): Promise<Teacher>{
+    private async findTeacher(userId:string): Promise<Teacher>{
         
         try {
-            return await this.seacherModel.findOne({where: {userId: userIdf}});
+            return await this.teacherModel.findOne({userId});
         } catch (error) {
             return undefined;
         }
@@ -82,7 +82,7 @@ export class TeacherService{
     }
 
     async deleteTeacher(seacherId:string){
-       const result = await this.seacherModel.deleteOne({_id:seacherId}).exec();
+       const result = await this.teacherModel.deleteOne({_id:seacherId}).exec();
        if(result.n ===0){
            throw new NotFoundException('No se encontro el estudiante');
        }

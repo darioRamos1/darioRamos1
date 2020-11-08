@@ -51,10 +51,11 @@ export class StudentService{
         }
     }
 
-    private async findStudent(userIdf:string): Promise<Student>{
+    private async findStudent(userId:string): Promise<Student>{
         
         try {
-            return await this.studentModel.findOne({where: {userId: userIdf}});
+            const student =  await this.studentModel.findOne({userId});
+            return student;
         } catch (error) {
             return undefined;
         }
