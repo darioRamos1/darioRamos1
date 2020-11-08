@@ -20,7 +20,7 @@ export class TeacherService{
             );
 
         await newTeacher.save();
-        return new DefaultResponse('Estudiante registrado');
+        return new DefaultResponse('Docente registrado');
     }
     
     async getAllTeachers(){
@@ -41,7 +41,7 @@ export class TeacherService{
                 return new SearchTeacherRespond(null,'No se encontro el docente');
             }
 
-            return new SearchTeacherRespond(teacher, 'Estudiante encontrado');
+            return new SearchTeacherRespond(teacher, 'Docente encontrado');
 
         } catch (error) {
             return new SearchTeacherRespond(null,'No se encontro el docente');
