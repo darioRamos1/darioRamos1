@@ -1,5 +1,5 @@
 import { Controller, Post, Body , Get, Param, Patch, Delete} from "@nestjs/common";
-import { StudentService,RegisterStudentRequest, UpdateStudentRequest, } from "src/Services/student.service";
+import { StudentService,RegisterStudentRequest, UpdateStudentRequest, LoginRequest, } from "src/Services/student.service";
 
 @Controller('students')
 export class StudentsController{
@@ -8,6 +8,11 @@ export class StudentsController{
     @Post()
     async addStudent( @Body() request:RegisterStudentRequest) {
         return await this.studentService.insertStudent(request);   
+    }
+
+    @Post('login')
+    async login( @Body() request:LoginRequest){
+        return await this.studentService.loginStudent(request);
     }
 
     @Get()

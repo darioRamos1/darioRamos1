@@ -6,13 +6,11 @@ import {Model} from 'mongoose'
 @Injectable()
 export class TeacherService{
 
-    private teachers: Teacher[] = [];
-
-    constructor(@InjectModel('Teacher') private readonly teacherModel: Model<Teacher>){}
+    constructor(@InjectModel('Teacher') private readonly seacherModel: Model<Teacher>){}
 
     async insertTeacher(request:RegisterTeacherRequest): Promise<DefaultResponse>{
 
-        const newTeacher = new this.teacherModel({
+        const newTeacher = new this.seacherModel({
             name:request.name,
             userId:request.userId,
             password:request.password
@@ -20,71 +18,100 @@ export class TeacherService{
             );
 
         await newTeacher.save();
-        return new DefaultResponse('Docente registrado');
+        return new DefaultResponse('Estudiante registrado');
+    }
+
+    async loginTeacher(request:LoginRequest): Promise<LoginResponse> {
+        
+        const seacher = await this.findTeacher(request.userId);
+        
+        if(seacher != undefined){
+            if (seacher.password == request.password){
+                return new LoginResponse(seacher,null);
+            }
+            return new LoginResponse(undefined, 'Contraseña incorrecta');
+        }else{
+            return new LoginResponse(seacher,'Estudiante no se encuentra registrado');
+        }
     }
     
     async getAllTeachers(){
-        const teachers = await this.teacherModel.find().exec();
-        return teachers as Teacher[];
+        const seachers = await this.seacherModel.find().exec();
+        return seachers as Teacher[];
     }  
 
-    async getTeacher(teacherId:string){
-        return await this.findTeacher(teacherId);
+    async getTeacher(seacherId:string): Promise<SearchTeacherResponse>{
+        const seacher = await this.findTeacher(seacherId);
+
+        if(seacher!=undefined){
+            return new SearchTeacherResponse(seacher,null);
+        }else{
+            return new SearchTeacherResponse(null,'No se encontro al estudiante');
+        }
     }
 
-    private async findTeacher(teacherId:string): Promise<SearchTeacherRespond>{
-
+    private async findTeacher(userIdf:string): Promise<Teacher>{
+        
         try {
-            const teacher:Teacher = await this.teacherModel.findById(teacherId).exec();
-
-            if(!teacher){
-                return new SearchTeacherRespond(null,'No se encontro el docente');
-            }
-
-            return new SearchTeacherRespond(teacher, 'Docente encontrado');
-
+            return await this.seacherModel.findOne({where: {userId: userIdf}});
         } catch (error) {
-            return new SearchTeacherRespond(null,'No se encontro el docente');
+            return undefined;
         }
         
     }
 
-    async updateTeacher(teacherId:string, request:UpdateTeacherRequest): Promise<DefaultResponse>{
-        const updatedTeacher = await this.findTeacher(teacherId);
+    async updateTeacher(seacherId:string, request:UpdateTeacherRequest): Promise<DefaultResponse>{
+        const updatedTeacher = await this.findTeacher(seacherId);
         
-        if(updatedTeacher.teacher!=null){
+        if(updatedTeacher!=undefined){
             if(request.name){
-                updatedTeacher.teacher.name = request.name;
+                updatedTeacher.name = request.name;
             }
             if(request.password){
-                updatedTeacher.teacher.password = request.password;
+                updatedTeacher.password = request.password;
             }
             if(request.userId){
-                updatedTeacher.teacher.userId = request.userId;
+                updatedTeacher.userId = request.userId;
             }
         }else{
-            return new DefaultResponse('No se encontro el docente');
+            return new DefaultResponse('No se encontro el estudiante');
         }
 
-        updatedTeacher.teacher.save();
+        updatedTeacher.save();
         return new DefaultResponse('Estudiante modificado con exito');
     }
 
-    async deleteTeacher(teacherId:string){
-       const result = await this.teacherModel.deleteOne({_id:teacherId}).exec();
+    async deleteTeacher(seacherId:string){
+       const result = await this.seacherModel.deleteOne({_id:seacherId}).exec();
        if(result.n ===0){
-           throw new NotFoundException('No se encontro el docente');
+           throw new NotFoundException('No se encontro el estudiante');
        }
     }
    
 }
 
-export class SearchTeacherRespond{
+
+export class LoginRequest{
     constructor(
-        public teacher:Teacher,
+        public userId:string,
+        public password:string,
+    ){}
+}
+
+export class LoginResponse{
+    constructor(
+        public seacher:Teacher,
         public message?:string,
     ){}
 }
+
+export class SearchTeacherResponse{
+    constructor(
+        public seacher:Teacher,
+        public message?:string,
+    ){}
+}
+
 
 export class RegisterTeacherRequest{
 
@@ -109,5 +136,7 @@ export class DefaultResponse{
         public message:string
     ){}
 }
+
+
 
 
