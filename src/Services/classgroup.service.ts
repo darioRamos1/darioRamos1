@@ -66,10 +66,13 @@ export class ClassgroupService{
         return new DefaultResponse('Clase modificada con exito');
     }
 
-    async deleteClassgroup(classgroupCode:string){
+    async deleteClassgroup(classgroupCode:string):Promise<DefaultResponse>{
        const result = await this.classgroupModel.deleteOne({code:classgroupCode}).exec();
+       
        if(result.n ===0){
-           throw new NotFoundException('No se encontro la clase');
+           return new DefaultResponse('No se encontro la clase');
+       }else{
+           return new DefaultResponse('Eliminado con exito');
        }
     }
    
