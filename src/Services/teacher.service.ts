@@ -23,28 +23,28 @@ export class TeacherService{
 
     async loginTeacher(request:LoginRequest): Promise<LoginResponse> {
         
-        const seacher = await this.findTeacher(request.userId);
+        const teacher = await this.findTeacher(request.userId);
         
-        if(seacher != undefined){
-            if (seacher.password == request.password){
-                return new LoginResponse(seacher,null);
+        if(teacher != undefined){
+            if (teacher.password == request.password){
+                return new LoginResponse(teacher,null);
             }
             return new LoginResponse(undefined, 'Contraseña incorrecta');
         }else{
-            return new LoginResponse(seacher,'Estudiante no se encuentra registrado');
+            return new LoginResponse(teacher,'Estudiante no se encuentra registrado');
         }
     }
     
     async getAllTeachers(){
-        const seachers = await this.teacherModel.find().exec();
-        return seachers as Teacher[];
+        const teachers = await this.teacherModel.find().exec();
+        return teachers as Teacher[];
     }  
 
-    async getTeacher(seacherId:string): Promise<SearchTeacherResponse>{
-        const seacher = await this.findTeacher(seacherId);
+    async getTeacher(teacherId:string): Promise<SearchTeacherResponse>{
+        const teacher = await this.findTeacher(teacherId);
 
-        if(seacher!=undefined){
-            return new SearchTeacherResponse(seacher,null);
+        if(teacher!=undefined){
+            return new SearchTeacherResponse(teacher,null);
         }else{
             return new SearchTeacherResponse(null,'No se encontro al estudiante');
         }
@@ -60,8 +60,8 @@ export class TeacherService{
         
     }
 
-    async updateTeacher(seacherId:string, request:UpdateTeacherRequest): Promise<DefaultResponse>{
-        const updatedTeacher = await this.findTeacher(seacherId);
+    async updateTeacher(teacherId:string, request:UpdateTeacherRequest): Promise<DefaultResponse>{
+        const updatedTeacher = await this.findTeacher(teacherId);
         
         if(updatedTeacher!=undefined){
             if(request.name){
@@ -81,8 +81,8 @@ export class TeacherService{
         return new DefaultResponse('Estudiante modificado con exito');
     }
 
-    async deleteTeacher(seacherId:string){
-       const result = await this.teacherModel.deleteOne({_id:seacherId}).exec();
+    async deleteTeacher(teacherId:string){
+       const result = await this.teacherModel.deleteOne({_id:teacherId}).exec();
        if(result.n ===0){
            throw new NotFoundException('No se encontro el estudiante');
        }
@@ -100,14 +100,14 @@ export class LoginRequest{
 
 export class LoginResponse{
     constructor(
-        public seacher:Teacher,
+        public teacher:Teacher,
         public message?:string,
     ){}
 }
 
 export class SearchTeacherResponse{
     constructor(
-        public seacher:Teacher,
+        public teacher:Teacher,
         public message?:string,
     ){}
 }
