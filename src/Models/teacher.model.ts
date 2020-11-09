@@ -7,7 +7,6 @@ export const TeacherSchema = new mongoose.Schema({
 });
 
 export interface Teacher extends mongoose.Document{
-  id:string,
   name:string,
   password:string,
   userId:string
