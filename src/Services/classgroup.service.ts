@@ -18,21 +18,30 @@ export class ClassgroupService{
             );
 
         await newClassgroup.save();
-        return new DefaultResponse('Clase registrada');
+        return new DefaultResponse(0,'Clase registrada');
     }
     
-    async getAllClassgroups(): Promise<SearchClassAllgroupResponse>{
-        const classgroups = await this.classgroupModel.find().exec();
-        return new SearchClassAllgroupResponse(classgroups);
+    async getTeacherClassgroups(teacherId:string): Promise<SearchClassAllgroupResponse>{
+        let state=0;
+        const classgroups = await this.classgroupModel.find({teacher:teacherId},
+            function(err,clases){
+                if(err){
+                    state = 1;
+                    return [];
+                }
+                return clases;
+            });
+            
+        return new SearchClassAllgroupResponse(state,classgroups);
     }  
 
     async getClassgroup(classgroupCode:string): Promise<SearchClassgroupResponse>{
         const classgroup = await this.findClassgroup(classgroupCode);
 
         if(classgroup!=undefined){
-            return new SearchClassgroupResponse(classgroup,null);
+            return new SearchClassgroupResponse(0,classgroup,null);
         }else{
-            return new SearchClassgroupResponse(null,'No se encontro la clase');
+            return new SearchClassgroupResponse(1,null,'No se encontro la clase');
         }
     }
 
@@ -59,20 +68,20 @@ export class ClassgroupService{
             }
            
         }else{
-            return new DefaultResponse('No se encontro la clase');
+            return new DefaultResponse(1,'No se encontro la clase');
         }
 
         updatedClassgroup.save();
-        return new DefaultResponse('Clase modificada con exito');
+        return new DefaultResponse(0,'Clase modificada con exito');
     }
 
     async deleteClassgroup(classgroupCode:string):Promise<DefaultResponse>{
        const result = await this.classgroupModel.deleteOne({code:classgroupCode}).exec();
        
        if(result.n ===0){
-           return new DefaultResponse('No se encontro la clase');
+           return new DefaultResponse(1,'No se encontro la clase');
        }else{
-           return new DefaultResponse('Eliminado con exito');
+           return new DefaultResponse(0,'Eliminado con exito');
        }
     }
    
@@ -81,13 +90,16 @@ export class ClassgroupService{
 
 export class SearchClassgroupResponse{
     constructor(
+        public state:number,
         public classgroup:Classgroup,
         public message?:string,
+        
     ){}
 }
 
 export class SearchClassAllgroupResponse{
     constructor(
+        public state:number,
         public classgroups:Classgroup[],
     ){}
 }
@@ -112,6 +124,7 @@ export class UpdateClassgroupRequest{
 
 export class DefaultResponse{
     constructor(
+        public state:number,
         public message:string
     ){}
 }

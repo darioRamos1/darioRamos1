@@ -10,9 +10,9 @@ export class ClassgroupsController{
         return await this.classgroupService.insertClassgroup(request);   
     }
 
-    @Get()
-    async getAllClassgroups(){
-        return await this.classgroupService.getAllClassgroups();
+    @Get('teacher/:id')
+    async getTeacherClassgroups(@Param('id') teacherId:string){
+        return await this.classgroupService.getTeacherClassgroups(teacherId);
     }
 
     @Get(':id')
