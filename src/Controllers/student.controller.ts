@@ -23,6 +23,7 @@ export class StudentsController{
             name:stud.name,
             userId:stud.userId,
             password:stud.password,
+            classgroup:stud.classgroup,
             age:stud.age}));
     }
 

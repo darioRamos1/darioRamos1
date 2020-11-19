@@ -14,12 +14,13 @@ export class StudentService{
             name:request.name,
             age:request.age,
             userId:request.userId,
-            password:request.password
+            password:request.password,
+            classgroup:request.classgroup
         }
             );
 
         await newStudent.save();
-        return new DefaultResponse('Estudiante registrado');
+        return new DefaultResponse(0,'Estudiante registrado');
     }
 
     async loginStudent(request:LoginRequest): Promise<LoginResponse> {
@@ -78,12 +79,15 @@ export class StudentService{
             if(request.userId){
                 updatedStudent.userId = request.userId;
             }
+            if(request.classgroup){
+                updatedStudent.classgroup = request.classgroup;
+            }
         }else{
-            return new DefaultResponse('No se encontro el estudiante');
+            return new DefaultResponse(1,'No se encontro el estudiante');
         }
 
         updatedStudent.save();
-        return new DefaultResponse('Estudiante modificado con exito');
+        return new DefaultResponse(0,'Estudiante modificado con exito');
     }
 
     async deleteStudent(studentId:string){
@@ -124,7 +128,8 @@ export class RegisterStudentRequest{
         public name:string,
         public age:number,
         public userId:string,
-        public password:string
+        public password:string,
+        public classgroup?:string,
     ){}
 }
 
@@ -134,12 +139,14 @@ export class UpdateStudentRequest{
         public name:string,
         public age:number,
         public userId:string,
-        public password:string
+        public password:string,
+        public classgroup?:string,
     ){}
 }
 
 export class DefaultResponse{
     constructor(
+        public state:number,
         public message:string
     ){}
 }
