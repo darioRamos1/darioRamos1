@@ -18,7 +18,7 @@ export class TeacherService{
             );
 
         await newTeacher.save();
-        return new DefaultResponse('Estudiante registrado');
+        return new DefaultResponse(0,'Tutor registrado');
     }
 
     async loginTeacher(request:LoginRequest): Promise<LoginResponse> {
@@ -27,11 +27,11 @@ export class TeacherService{
         
         if(teacher != undefined){
             if (teacher.password == request.password){
-                return new LoginResponse(teacher,null);
+                return new LoginResponse(0,teacher,null);
             }
-            return new LoginResponse(undefined, 'Contraseña incorrecta');
+            return new LoginResponse(1,undefined, 'Contraseña incorrecta');
         }else{
-            return new LoginResponse(teacher,'Estudiante no se encuentra registrado');
+            return new LoginResponse(1,teacher,'Tutor no se encuentra registrado');
         }
     }
     
@@ -46,7 +46,7 @@ export class TeacherService{
         if(teacher!=undefined){
             return new SearchTeacherResponse(teacher,null);
         }else{
-            return new SearchTeacherResponse(null,'No se encontro al estudiante');
+            return new SearchTeacherResponse(null,'No se encontro al Tutor');
         }
     }
 
@@ -74,17 +74,17 @@ export class TeacherService{
                 updatedTeacher.userId = request.userId;
             }
         }else{
-            return new DefaultResponse('No se encontro el estudiante');
+            return new DefaultResponse(1,'No se encontro el Tutor');
         }
 
         updatedTeacher.save();
-        return new DefaultResponse('Estudiante modificado con exito');
+        return new DefaultResponse(0,'Tutor modificado con exito');
     }
 
     async deleteTeacher(teacherId:string){
        const result = await this.teacherModel.deleteOne({_id:teacherId}).exec();
        if(result.n ===0){
-           throw new NotFoundException('No se encontro el estudiante');
+           throw new NotFoundException(1,'No se encontro el Tutor');
        }
     }
    
@@ -100,6 +100,7 @@ export class LoginRequest{
 
 export class LoginResponse{
     constructor(
+        public state:number,
         public teacher:Teacher,
         public message?:string,
     ){}
@@ -133,6 +134,7 @@ export class UpdateTeacherRequest{
 
 export class DefaultResponse{
     constructor(
+        public state:number,
         public message:string
     ){}
 }
