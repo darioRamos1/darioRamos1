@@ -67,5 +67,10 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-prometheus.git"
+    }
+  ]
 }
