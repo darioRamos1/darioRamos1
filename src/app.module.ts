@@ -6,10 +6,11 @@ import { AppService } from './app.service';
 import { StudentsModule } from './Modules/students.module';
 import { TeachersModule } from './Modules/teachers.module';
 import { ClassgroupsModule } from './Modules/classgroup.module';
+import { SesionsModule} from './Modules/sesion.module';
 import {PrometheusModule} from '@willsoto/nestjs-prometheus';
 
 @Module({
-  imports: [StudentsModule,TeachersModule,ClassgroupsModule,
+  imports: [StudentsModule,TeachersModule,ClassgroupsModule,SesionsModule,
   PrometheusModule.register(),
    MongooseModule.forRoot(
     'mongodb+srv://user1:qweuio123789@cluster0.2wx5w.mongodb.net/disDB?retryWrites=true&w=majority'
