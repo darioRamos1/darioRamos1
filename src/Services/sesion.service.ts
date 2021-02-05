@@ -11,7 +11,6 @@ export class SesionService{
     async insertSesion(request:RegisterSesionRequest): Promise<DefaultResponse>{
 
         const newSesion = new this.sesionModel({
-            sesion_id: request.sesion_id,
             student: request.student,
             tipo: request.tipo,
             fecha: request.fecha
@@ -36,45 +35,7 @@ export class SesionService{
         return new SearchClassAllgroupResponse(state,sesions);
     }  
 
-    async getSesion(sesionCode:string): Promise<SearchSesionResponse>{
-        const sesion = await this.findSesion(sesionCode);
 
-        if(sesion!=undefined){
-            return new SearchSesionResponse(0,sesion,null);
-        }else{
-            return new SearchSesionResponse(1,null,'No se encontro la sesion');
-        }
-    }
-
-    private async findSesion(sesionCode:string): Promise<Sesion>{
-        
-        try {
-            const sesion =  await this.sesionModel.findOne({code:sesionCode});
-            return sesion;
-        } catch (error) {
-            return undefined;
-        }
-        
-    }
-
-    async updateSesion(sesionCode:string, request:UpdateSesionRequest): Promise<DefaultResponse>{
-        const updatedSesion = await this.findSesion(sesionCode);
-        
-        if(updatedSesion!=undefined){
-            if(request.fecha){
-                updatedSesion.fecha = request.fecha;
-            }
-            if(request.tipo){
-                updatedSesion.tipo = request.tipo
-            }
-           
-        }else{
-            return new DefaultResponse(1,'No se encontro la sesion');
-        }
-
-        updatedSesion.save();
-        return new DefaultResponse(0,'Sesion modificada con exito');
-    }
 
     async deleteSesion(sesionCode:string):Promise<DefaultResponse>{
        const result = await this.sesionModel.deleteOne({code:sesionCode}).exec();
@@ -109,16 +70,7 @@ export class SearchClassAllgroupResponse{
 export class RegisterSesionRequest{
 
     constructor(
-        public sesion_id:string,
         public student:string,
-        public tipo:number,
-        public fecha:string
-    ){}
-}
-
-export class UpdateSesionRequest{
-
-    constructor(
         public tipo:number,
         public fecha:string
     ){}
