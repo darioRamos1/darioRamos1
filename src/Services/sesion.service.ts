@@ -21,7 +21,7 @@ export class SesionService{
         return new DefaultResponse(0,'Sesion registrada');
     }
     
-    async getStudentSesions(studentId:string): Promise<SearchClassAllgroupResponse>{
+    async getStudentSesions(studentId:string): Promise<SearchAllSesionsResponse>{
         let state=0;
         const sesions = await this.sesionModel.find({student:studentId},
             function(err,sesiones){
@@ -32,7 +32,7 @@ export class SesionService{
                 return sesiones;
             });
             
-        return new SearchClassAllgroupResponse(state,sesions);
+        return new SearchAllSesionsResponse(state,sesions);
     }  
 
 
@@ -59,7 +59,7 @@ export class SearchSesionResponse{
     ){}
 }
 
-export class SearchClassAllgroupResponse{
+export class SearchAllSesionsResponse{
     constructor(
         public state:number,
         public sesions:Sesion[],
