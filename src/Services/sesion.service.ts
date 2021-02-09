@@ -17,8 +17,8 @@ export class SesionService{
         }
             );
 
-        await newSesion.save();
-        return new DefaultResponse(0,'Sesion registrada');
+        const a = await newSesion.save();
+        return new DefaultResponse(0,'Sesion registrada',a.id);
     }
     
     async getStudentSesions(studentId:string): Promise<SearchAllSesionsResponse>{
@@ -37,13 +37,13 @@ export class SesionService{
 
 
 
-    async deleteSesion(sesionCode:string):Promise<DefaultResponse>{
-       const result = await this.sesionModel.deleteOne({code:sesionCode}).exec();
+    async deleteSesion(sesionId:string):Promise<DefaultResponse>{
+       const result = await this.sesionModel.deleteOne({sesionId:sesionId}).exec();
        
        if(result.n ===0){
-           return new DefaultResponse(1,'No se encontro la sesion');
+           return new DefaultResponse(1,'No se encontro la sesion',sesionId);
        }else{
-           return new DefaultResponse(0,'Eliminado con exito');
+           return new DefaultResponse(0,'Eliminado con exito',sesionId);
        }
     }
    
@@ -79,7 +79,8 @@ export class RegisterSesionRequest{
 export class DefaultResponse{
     constructor(
         public state:number,
-        public message:string
+        public message:string,
+        public sesionId:string
     ){}
 }
 
