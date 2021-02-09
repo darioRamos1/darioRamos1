@@ -75,7 +75,7 @@ export class RegisterAreaResultRequest{
     constructor(
         public sesionId:string,
         public area:string,
-        public aciertos:string,
+        public aciertos:number,
         public preguntas:number,
         public tiempo:number
     ){}
