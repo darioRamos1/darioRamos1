@@ -8,10 +8,10 @@ import { TeachersModule } from './Modules/teachers.module';
 import { ClassgroupsModule } from './Modules/classgroup.module';
 import { SesionsModule} from './Modules/sesion.module';
 import {PrometheusModule} from '@willsoto/nestjs-prometheus';
-import { AreaResultsModule } from './Modules/areaResult.module';
+import { ActivityResultsModule } from './Modules/activityResult.module';
 
 @Module({
-  imports: [StudentsModule,TeachersModule,ClassgroupsModule,SesionsModule,AreaResultsModule,
+  imports: [StudentsModule,TeachersModule,ClassgroupsModule,SesionsModule,ActivityResultsModule,
   PrometheusModule.register(),
    MongooseModule.forRoot(
     'mongodb+srv://user1:qweuio123789@cluster0.2wx5w.mongodb.net/disDB?retryWrites=true&w=majority'
