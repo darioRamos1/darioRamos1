@@ -1,5 +1,5 @@
 import { Controller, Post, Body , Get, Param, Delete} from "@nestjs/common";
-import { ActivityResultService,RegisterActivityResultRequest,  } from "src/Services/activityResult.service";
+import { ActivityResultService,RegisterActivityResultRequest, RegisterGroupActivityResultRequest,  } from "src/Services/activityResult.service";
 
 @Controller('ActivityResult')
 export class ActivityResultsController{
@@ -8,6 +8,11 @@ export class ActivityResultsController{
     @Post()
     async addActivityResult( @Body() request:RegisterActivityResultRequest) {
         return await this.activityResultService.insertActivityResult(request);   
+    }
+
+    @Post('group')
+    async addGroupActivityResult( @Body() request:RegisterGroupActivityResultRequest) {
+        return await this.activityResultService.insertGroupActivityResult(request);   
     }
 
     @Get('sesion/:id')

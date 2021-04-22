@@ -22,6 +22,23 @@ export class ActivityResultService{
         await newActivityResult.save();
         return new DefaultResponse(0,'ActivityResult registrada');
     }
+
+    async insertGroupActivityResult(request:RegisterGroupActivityResultRequest){
+
+         request.activities.forEach(async acty => {
+            const newActivityResult = new this.activityResultModel({
+                sesionId: acty.sesionId,
+                area: acty.area,
+                indice: acty.indice,
+                resultado: acty.resultado,
+                tiempo: acty.tiempo,
+            }
+            );
+            await newActivityResult.save();
+        });
+        return new DefaultResponse(0,'ActivityResult grupo registrado');
+    }
+
     
     async getStudentActivityResults(sesionId:string): Promise<SearchAllActivityResponse>{
         let state=0;
@@ -67,6 +84,12 @@ export class SearchAllActivityResponse{
     ){}
 }
 
+export class RegisterGroupActivityResultRequest{
+
+    constructor(
+        public activities: ActivityResult[]
+    ){}
+}
 
 export class RegisterActivityResultRequest{
 
