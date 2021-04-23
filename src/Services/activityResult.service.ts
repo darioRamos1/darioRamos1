@@ -24,19 +24,22 @@ export class ActivityResultService{
     }
 
     async insertGroupActivityResult(request:RegisterGroupActivityResultRequest){
-
-         request.activities.forEach(async acty => {
-            const newActivityResult = new this.activityResultModel({
-                sesionId: acty.sesionId,
-                area: acty.area,
-                indice: acty.indice,
-                resultado: acty.resultado,
-                tiempo: acty.tiempo,
-            }
-            );
-            await newActivityResult.save();
-        });
-        return new DefaultResponse(0,'ActivityResult grupo registrado');
+        
+        if(request!=undefined){
+            request.activities.forEach(async acty => {
+                const newActivityResult = new this.activityResultModel({
+                    sesionId: acty.sesionId,
+                    area: acty.area,
+                    indice: acty.indice,
+                    resultado: acty.resultado,
+                    tiempo: acty.tiempo,
+                }
+                );
+                await newActivityResult.save();
+            });
+            return new DefaultResponse(0,'ActivityResult grupo registrado');
+        }
+        return new DefaultResponse(1,'ActivityResult error undefined');
     }
 
     
