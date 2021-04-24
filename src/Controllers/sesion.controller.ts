@@ -1,5 +1,5 @@
-import { Controller, Post, Body , Get, Param, Delete} from "@nestjs/common";
-import { SesionService,RegisterSesionRequest,  } from "src/Services/sesion.service";
+import { Controller, Post, Body , Get, Param, Delete, Patch} from "@nestjs/common";
+import { SesionService,RegisterSesionRequest, UpdateSesionRequest,  } from "src/Services/sesion.service";
 
 @Controller('sesions')
 export class SesionsController{
@@ -21,5 +21,9 @@ export class SesionsController{
         return await this.sesionService.deleteSesion(sesionId);
     }
 
-  
+    @Patch()
+    async updateSesion(@Body() request:UpdateSesionRequest){
+        
+        return await this.sesionService.updateSesion(request);
+    }
 }
