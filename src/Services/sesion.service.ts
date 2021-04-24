@@ -14,7 +14,7 @@ export class SesionService{
             student: request.student,
             tipo: request.tipo,
             fecha: request.fecha,
-            estado: false
+            estado: request.estado
         }
             );
 
@@ -89,7 +89,8 @@ export class RegisterSesionRequest{
     constructor(
         public student:string,
         public tipo:number,
-        public fecha:string
+        public fecha:string,
+        public estado?:boolean
     ){}
 }
 export class UpdateSesionRequest{
