@@ -43,7 +43,7 @@ export class ActivityResultService{
     }
 
     
-    async getStudentActivityResults(sesionId:string): Promise<SearchAllActivityResponse>{
+    async getSesionActivityResults(sesionId:string): Promise<SearchAllActivityResponse>{
         let state=0;
         const activityResults = await this.activityResultModel.find({sesionId:sesionId},
             function(err,activityResultes){

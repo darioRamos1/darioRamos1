@@ -16,8 +16,8 @@ export class ActivityResultsController{
     }
 
     @Get('sesion/:id')
-    async getStudentActivityResults(@Param('id') sesionId:string){
-        return await this.activityResultService.getStudentActivityResults(sesionId);
+    async getSesionActivityResults(@Param('id') sesionId:string){
+        return await this.activityResultService.getSesionActivityResults(sesionId);
     }
 
     @Delete(':id')

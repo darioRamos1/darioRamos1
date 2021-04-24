@@ -13,7 +13,8 @@ export class SesionService{
         const newSesion = new this.sesionModel({
             student: request.student,
             tipo: request.tipo,
-            fecha: request.fecha
+            fecha: request.fecha,
+            estado: false
         }
             );
 
@@ -27,16 +28,32 @@ export class SesionService{
             function(err,sesiones){
                 if(err){
                     state = 1;
-                    return [];
+                    return new SearchAllSesionsResponse(state,[]);
                 }
-                return sesiones;
+                return new SearchAllSesionsResponse(state,sesiones);
             });
             
         return new SearchAllSesionsResponse(state,sesions);
     }  
 
 
+    async updateStudent(request:UpdateSesionRequest): Promise<DefaultResponse>{
+        let state = 0;
+        const updatedSesion = await this.sesionModel.findOne({_id:request.sesionId},function(err){
+            if(err){
+                state = 1;
+                return new DefaultResponse(state,"Error",'');
+            }
+        });
+        if(updatedSesion!=undefined){
+            updatedSesion.estado = request.estado;
+        }else{
+            return new DefaultResponse(1,'No se encontro la sesion',request.sesionId);
+        }
 
+        updatedSesion.save();
+        return new DefaultResponse(0,'Sesion modificada con exito',updatedSesion.id);
+    }
     async deleteSesion(sesionId:string):Promise<DefaultResponse>{
        const result = await this.sesionModel.deleteOne({sesionId:sesionId}).exec();
        
@@ -75,7 +92,12 @@ export class RegisterSesionRequest{
         public fecha:string
     ){}
 }
-
+export class UpdateSesionRequest{
+    constructor(
+        public sesionId:string,
+        public estado:boolean
+    ){}
+}
 export class DefaultResponse{
     constructor(
         public state:number,
