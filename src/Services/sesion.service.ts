@@ -37,7 +37,7 @@ export class SesionService{
     }  
 
 
-    async updateStudent(request:UpdateSesionRequest): Promise<DefaultResponse>{
+    async updateSesion(request:UpdateSesionRequest): Promise<DefaultResponse>{
         let state = 0;
         const updatedSesion = await this.sesionModel.findOne({_id:request.sesionId},function(err){
             if(err){
