@@ -12,7 +12,7 @@ export class ClassgroupService{
 
         const newClassgroup = new this.classgroupModel({
             name:request.name,
-            code:request.code,
+            code:this.generateCode(),
             teacher:request.teacher
         }
             );
@@ -21,6 +21,9 @@ export class ClassgroupService{
         return new DefaultResponse(0,'Clase registrada');
     }
     
+    generateCode(): string{
+       return Math.random().toString(36).substr(4, 5);
+    }
     async getTeacherClassgroups(teacherId:string): Promise<SearchClassAllgroupResponse>{
         let state=0;
         const classgroups = await this.classgroupModel.find({teacher:teacherId},
@@ -110,7 +113,6 @@ export class RegisterClassgroupRequest{
     constructor(
         public name:string,
         public teacher:string,
-        public code:string
     ){}
 }
 
