@@ -13,7 +13,7 @@ export class TeacherService {
     request: RegisterTeacherRequest,
   ): Promise<DefaultResponse> {
     const teacher = await this.findTeacher(request.userId);
-    if (teacher == undefined) {
+    if (teacher != undefined) {
       return new DefaultResponse(1, 'Nombre de usuario ya es encuentra en uso');
     } else {
       const newTeacher = new this.teacherModel({
