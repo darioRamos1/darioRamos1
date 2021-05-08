@@ -10,19 +10,33 @@ export class ClassgroupService{
 
     async insertClassgroup(request:RegisterClassgroupRequest): Promise<DefaultResponse>{
 
+        const codigo = await this.generateCode();
         const newClassgroup = new this.classgroupModel({
             name:request.name,
-            code:this.generateCode(),
+            code:codigo,
             teacher:request.teacher
         }
-            );
+        );
 
         await newClassgroup.save();
         return new DefaultResponse(0,'Clase registrada');
     }
     
-    generateCode(): string{
-       return Math.random().toString(36).substr(4, 5);
+    async generateCode(): Promise<string>{
+        try {
+            let codigodisponible = false;
+            let codigo = '';
+            do{
+                codigo = Math.random().toString(36).substr(4, 4).toUpperCase();
+                const classgroup = await this.classgroupModel.findOne({code:codigo});
+                if(classgroup == undefined){
+                    codigodisponible = true;
+                    return codigo;
+                }
+            }while(codigodisponible==false);
+        } catch (error) {
+            return '!!!!!!';
+        }
     }
     async getTeacherClassgroups(teacherId:string): Promise<SearchClassAllgroupResponse>{
         let state=0;
