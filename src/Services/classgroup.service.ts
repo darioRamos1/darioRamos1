@@ -11,6 +11,11 @@ export class ClassgroupService{
     async insertClassgroup(request:RegisterClassgroupRequest): Promise<DefaultResponse>{
 
         const codigo = await this.generateCode();
+        const clase = await this.classgroupModel.findOne({name:request.name});
+
+        if(clase!=undefined){
+            return new DefaultResponse(1,'Nombre de clase ya existe');
+        }
         const newClassgroup = new this.classgroupModel({
             name:request.name,
             code:codigo,

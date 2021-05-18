@@ -57,7 +57,7 @@ export class TeacherService {
 
   private async findTeacher(userId: string): Promise<Teacher> {
     try {
-       await this.teacherModel.findOne({ userId }, 
+      return await this.teacherModel.findOne({ userId }, 
         (err,res)=>{
             if(err){
                 return undefined;

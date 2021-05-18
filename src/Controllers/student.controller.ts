@@ -15,16 +15,9 @@ export class StudentsController{
         return await this.studentService.loginStudent(request);
     }
 
-    @Get()
-    async getAllStudents(){
-        const result = await this.studentService.getAllStudents();
-        return result.map((stud)=>({
-            id: stud.id, 
-            name:stud.name,
-            userId:stud.userId,
-            password:stud.password,
-            classgroup:stud.classgroup,
-            age:stud.age}));
+    @Get('classgroup/:id')
+    async getAllStudents(@Param('id') classgroup:string){
+        return await this.studentService.getClassgroupStudents(classgroup);
     }
 
     @Get(':id')

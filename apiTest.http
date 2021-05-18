@@ -1,0 +1,29 @@
+@localurl = http://localhost:3000
+@herokurul = https://discalproyect.herokuapp.com
+@url = {{localurl}}
+
+### Get students from class
+GET {{url}}/students/classgroup/ZBSI HTTP/1.1
+### GET all teachers
+GET {{url}}/teachers HTTP/1.1
+
+### GET specific teacher
+GET {{url}}/classgroups/teacher/Eli HTTP/1.1
+
+### POST login de teacher
+POST {{url}}/teachers/login
+Content-Type: application/json
+
+{
+    "userId":"juanita",
+    "password":"123"
+}
+
+### POST classgroup
+POST {{url}}/classgroups
+Content-Type: application/json
+
+{
+    "name":"classtest",
+    "teacher":"juanita"
+}

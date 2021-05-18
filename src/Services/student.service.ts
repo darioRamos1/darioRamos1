@@ -37,9 +37,17 @@ export class StudentService{
         }
     }
     
-    async getAllStudents(){
-        const students = await this.studentModel.find().exec();
-        return students as Student[];
+    async getClassgroupStudents(classgroupId:string): Promise<SearchClassStudents>{
+        let state = 0;
+        const students = await this.studentModel.find({classgroup:classgroupId},
+            function(err,clases){
+                if(err){
+                    state = 1;
+                    return [];
+                }
+                return clases;
+            });
+        return new SearchClassStudents(state,students);
     }  
 
     async getStudent(studentId:string): Promise<SearchStudentResponse>{
@@ -130,6 +138,13 @@ export class RegisterStudentRequest{
         public userId:string,
         public password:string,
         public classgroup?:string,
+    ){}
+}
+
+export class SearchClassStudents{
+    constructor(
+        public state: number,
+        public students: Student[]
     ){}
 }
 
