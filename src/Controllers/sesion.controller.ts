@@ -1,10 +1,14 @@
 import { Controller, Post, Body , Get, Param, Delete, Patch} from "@nestjs/common";
+import { ActivityResultService } from "src/Services/activityResult.service";
+import { AreaResultService } from "src/Services/areaResult.service";
 import { SesionService,RegisterSesionRequest, UpdateSesionRequest,  } from "src/Services/sesion.service";
 
 @Controller('sesions')
 export class SesionsController{
 
-    constructor(private sesionService: SesionService){}
+    constructor(private sesionService: SesionService,
+        private activityService: ActivityResultService,
+        private areaResultService:AreaResultService){}
     @Post()
     async addSesion( @Body() request:RegisterSesionRequest) {
         return await this.sesionService.insertSesion(request);   
@@ -24,6 +28,20 @@ export class SesionsController{
     @Patch()
     async updateSesion(@Body() request:UpdateSesionRequest){
         
-        return await this.sesionService.updateSesion(request);
+        const response = await this.sesionService.updateSesion(request);
+        if(response.state===0){
+            const activities = await this.activityService.getSesionActivityResults(request.sesionId);
+            if(activities.state==0){
+               const areaResponse = await this.areaResultService.createAreaResult(activities.activityResults,request.sesionId);
+                if(areaResponse!=null && areaResponse.state==0){
+                    activities.activityResults.forEach(async element => {
+                       await this.activityService.deleteActivityResult(element.id);
+                    });
+                    return areaResponse;
+                }
+            }
+            return activities;
+        }
+        return response;
     }
 }

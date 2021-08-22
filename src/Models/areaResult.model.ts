@@ -1,17 +1,15 @@
 import * as mongoose from 'mongoose';
 
-export const ActivityResultSchema = new mongoose.Schema({
+export const AreaResultSchema = new mongoose.Schema({
     sesionId: String,
     area: String,
     resultado: Number,
     tiempo: Number,
-    indice: Number
 });
 
-export interface ActivityResult extends mongoose.Document{
+export interface AreaResult extends mongoose.Document{
     sesionId: string,
     area: string,
     resultado: number,
     tiempo: number,
-    indice: number
 }

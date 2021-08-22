@@ -71,15 +71,6 @@ export class ActivityResultService{
    
 }
 
-
-export class SearchActivityResultResponse{
-    constructor(
-        public state:number,
-        public activityResult:ActivityResult,
-        public message?:string,
-    ){}
-}
-
 export class SearchAllActivityResponse{
     constructor(
         public state:number,
