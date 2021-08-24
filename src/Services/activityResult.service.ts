@@ -57,6 +57,18 @@ export class ActivityResultService {
         return new SearchAllActivityResponse(state, activityResults);
     }
 
+    async getAllActivityResults(): Promise<SearchAllActivityResponse>{
+        let state = 0;
+        const activityResults = await this.activityResultModel.find({},
+            function (err, activityResultes) {
+                if (err) {
+                    state = 1;
+                    return [];
+                }
+                return activityResultes;
+            });
+        return new SearchAllActivityResponse(state, activityResults);
+    }
     async deleteActivityResult(activityResultCode: string): Promise<DefaultResponse> {
         const result = await this.activityResultModel.deleteOne({ code: activityResultCode }).exec();
 

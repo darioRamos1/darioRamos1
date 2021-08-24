@@ -10,6 +10,12 @@ GET {{url}}/teachers HTTP/1.1
 ### GET specific teacher
 GET {{url}}/classgroups/teacher/Eli HTTP/1.1
 
+### GET area result
+GET {{url}}/areaResult/sesion/6121b6f5234fb600233d3b6e HTTP/1.1
+
+### GET sessions of student
+GET {{url}}/sesions/student/yy HTTP/1.1
+
 ### POST login de teacher
 POST {{url}}/teachers/login
 Content-Type: application/json

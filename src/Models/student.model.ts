@@ -5,7 +5,8 @@ export const StudentSchema = new mongoose.Schema({
   age: Number,
   classgroup: String,
   userId:String,
-  password:String
+  password:String,
+  genero:String,
 });
 
 export interface Student extends mongoose.Document{
@@ -13,5 +14,6 @@ export interface Student extends mongoose.Document{
   age:number,
   classgroup:string,
   password:string,
-  userId:string
+  userId:string,
+  genero:string,
 }

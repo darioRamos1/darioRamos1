@@ -45,6 +45,7 @@ export class AreaResultService {
         });
 
         areasResults.forEach(async areaResult => {
+            if(!(areaResult.resultado==0 && areaResult.tiempo==0))
             await areaResult.save();
         });
 
