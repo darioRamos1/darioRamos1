@@ -65,12 +65,13 @@ export class SesionsController {
         const activities = await this.activityService.getSesionActivityResults(sesionId);
         if (activities.state == 0) {
             const areaResponse = await this.areaResultService.createAreaResult(activities.activityResults, sesionId);
-            if (areaResponse != null && areaResponse.state == 0) {
+            if (areaResponse.state && areaResponse.state == 0) {
                 activities.activityResults.forEach(async element => {
                     await this.activityService.deleteActivityResult(element.id);
                 });
                 return areaResponse;
             }
+            return areaResponse;
         }
         return activities;
     }
