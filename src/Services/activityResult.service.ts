@@ -69,8 +69,8 @@ export class ActivityResultService {
             });
         return new SearchAllActivityResponse(state, activityResults);
     }
-    async deleteActivityResult(activityResultCode: string): Promise<DefaultResponse> {
-        const result = await this.activityResultModel.deleteOne({ code: activityResultCode }).exec();
+    async deleteActivityResult(activityId: string): Promise<DefaultResponse> {
+        const result = await this.activityResultModel.deleteOne({ _id: activityId }).exec();
 
         if (result.n === 0) {
             return new DefaultResponse(1, 'No se encontro la activityResult');
