@@ -16,6 +16,7 @@ export class AreaResultService {
             area: request.area,
             resultado: request.resultado,
             tiempo: request.tiempo,
+            preguntas: request.preguntas
         }
         );
 
@@ -32,11 +33,13 @@ export class AreaResultService {
                 area: element,
                 resultado: 0,
                 tiempo: 0,
+                preguntas: 0
             }
             ));
         });
         activities.forEach(activity => {
             areasResults.forEach(areaResult => {
+                areaResult.preguntas++;
                 if (areaResult.area == activity.area) {
                     areaResult.resultado += activity.resultado;
                     areaResult.tiempo += activity.tiempo;
@@ -45,7 +48,7 @@ export class AreaResultService {
         });
 
         areasResults.forEach(async areaResult => {
-            if(!(areaResult.resultado==0 && areaResult.tiempo==0))
+            if(!(areaResult.resultado==0 && areaResult.tiempo==0 && areaResult.preguntas==0))
             await areaResult.save();
         });
 
@@ -108,7 +111,8 @@ export class RegisterAreaResultRequest {
         public sesionId: string,
         public area: string,
         public resultado: number,
-        public tiempo: number
+        public tiempo: number,
+        public preguntas: number
     ) { }
 }
 

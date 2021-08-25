@@ -22,14 +22,14 @@ export class SesionsController {
         //cuando acabe el test actualizo los resultados generales, se necesita el genero y el grado
         if(request.estado==true){
             const guardado = await this.guardarAreaResults(response.sesionId);
-            const activities = await this.activityService.getAllActivityResults();
+            const areas = await this.areaResultService.getSesionAreaResults(response.sesionId);
             const student = await this.studentService.getStudent(request.student);
             if(student.student!=null){
                 const clase = await this.classgroupService.getClassgroup(student.student.classgroup);
-                if(guardado.state ==0 && activities.state==0 && clase.state==0){
+                if(guardado.state ==0 && areas.state==0 && clase.state==0){
                     return await this.generalAreaService.updateGeneralAreas(
                         new UpdateGeneralAreaRequest(
-                            activities.activityResults,
+                            areas.areaResults,
                             clase.classgroup.grado,
                             student.student.genero)
                     );

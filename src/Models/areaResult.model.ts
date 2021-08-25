@@ -5,6 +5,7 @@ export const AreaResultSchema = new mongoose.Schema({
     area: String,
     resultado: Number,
     tiempo: Number,
+    preguntas: Number,
 });
 
 export interface AreaResult extends mongoose.Document{
@@ -12,4 +13,5 @@ export interface AreaResult extends mongoose.Document{
     area: string,
     resultado: number,
     tiempo: number,
+    preguntas: number
 }
