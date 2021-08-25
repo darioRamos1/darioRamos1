@@ -56,7 +56,7 @@ export class SesionsController {
     async updateSesion(@Body() request: UpdateSesionRequest) {
 
         const response = await this.sesionService.updateSesion(request);
-        if (response.state === 0) {
+        if (response.state == 0) {
             return await this.guardarAreaResults(request.sesionId);
         }
         return response;

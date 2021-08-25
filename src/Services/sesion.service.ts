@@ -48,7 +48,7 @@ export class SesionService {
             return new DefaultResponse(1, 'No se encontro la sesion', request.sesionId);
         }
 
-        updatedSesion.save();
+        await updatedSesion.save();
         return new DefaultResponse(0, 'Sesion modificada con exito', updatedSesion.id);
     }
 

@@ -39,8 +39,8 @@ export class AreaResultService {
         });
         activities.forEach(activity => {
             areasResults.forEach(areaResult => {
-                areaResult.preguntas++;
                 if (areaResult.area == activity.area) {
+                    areaResult.preguntas++;
                     areaResult.resultado += activity.resultado;
                     areaResult.tiempo += activity.tiempo;
                 }
