@@ -24,7 +24,7 @@ export class AreaResultService {
         return new DefaultResponse(0, 'AreaResult registrada');
     }
 
-    async createAreaResult(activities: ActivityResult[], sesionID: string) {
+    async createAreaResult(activities: ActivityResult[], sesionID: string): Promise<CreateAreaResultsResponse> {
 
         const areasResults: AreaResult[] = [];
         this.areas.forEach(element => {
@@ -48,11 +48,11 @@ export class AreaResultService {
         });
 
         areasResults.forEach(async areaResult => {
-            if(!( areaResult.preguntas==0))
-            await areaResult.save();
+            if (!(areaResult.preguntas == 0))
+                await areaResult.save();
         });
 
-        return new DefaultResponse(0, 'Areas registradas');
+        return new CreateAreaResultsResponse(0, areasResults);
     }
 
 
@@ -70,18 +70,20 @@ export class AreaResultService {
         "Número Mayor"
     ];
 
-    async getSesionAreaResults(sesionId: string): Promise<SearchAllAreaResponse> {
+    async getSesionAreaResults(sesionID: string): Promise<SearchAllAreaResponse> {
         let state = 0;
-        const activityResults = await this.areaResultModel.find({ sesionId: sesionId },
-            function (err, activityResultes) {
+        const areaResults = await this.areaResultModel.find({ sesionId: sesionID },
+            function (err, areaResultes) {
                 if (err) {
+                    console.log("Error" + err);
                     state = 1;
                     return [];
                 }
-                return activityResultes;
+                return areaResultes;
             });
-
-        return new SearchAllAreaResponse(state, activityResults);
+        console.log("areas::::");
+        console.log(areaResults);
+        return new SearchAllAreaResponse(state, areaResults);
     }
 
 
@@ -113,6 +115,14 @@ export class RegisterAreaResultRequest {
         public resultado: number,
         public tiempo: number,
         public preguntas: number
+    ) { }
+}
+
+export class CreateAreaResultsResponse {
+
+    constructor(
+        public state:number,
+        public areaResults: AreaResult[]
     ) { }
 }
 

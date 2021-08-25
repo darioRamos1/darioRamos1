@@ -43,17 +43,19 @@ export class GeneralAreaService {
             areasGenerales.forEach(areaGen => {
                 if (areaObj.area == areaGen.area) {
                     areaGen.total += areaObj.resultado;
-                    areaGen.numero++;
+                    areaGen.numero += 1;
                     areaGen.tiempoTotal += areaObj.tiempo;
                 }
             });
         });
+
         areasGenerales.forEach(areaGen => {
             if (areaGen.numero > 0) {
                 areaGen.media = areaGen.total / areaGen.numero;
                 areaGen.tiempo = areaGen.tiempoTotal / areaGen.numero;
             }
         });
+
         //desviacion tipica
         request.areaResults.forEach(areaObj => {
             areasGenerales.forEach(areaGen => {
@@ -68,7 +70,6 @@ export class GeneralAreaService {
         areasGenerales.forEach(areaGen => {
             areaGen.dt = Math.sqrt(areaGen.sumaDt / areaGen.numero);
         });
-
         //registrar el area general
         areasGenerales.forEach(async areaGen => {
             if (areaGen.numero > 0) {

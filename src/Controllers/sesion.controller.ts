@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Param, Delete, Patch } from "@nestjs/common";
 import { ActivityResultService } from "src/Services/activityResult.service";
-import { AreaResultService } from "src/Services/areaResult.service";
+import { AreaResultService, CreateAreaResultsResponse } from "src/Services/areaResult.service";
 import { ClassgroupService } from "src/Services/classgroup.service";
 import { GeneralAreaService, UpdateGeneralAreaRequest } from "src/Services/generalArea.service";
 import { SesionService, RegisterSesionRequest, UpdateSesionRequest, } from "src/Services/sesion.service";
@@ -39,15 +39,17 @@ export class SesionsController {
         const response = await this.sesionService.updateSesion(request);
         if (response.state == 0) {
             const guardado = await this.guardarAreaResults(response.sesion.id);
+
             if (response.sesion.tipo == 0 && request.estado == true) {
-                const areas = await this.areaResultService.getSesionAreaResults(response.sesion.id);
                 const student = await this.studentService.getStudent(response.sesion.student);
                 if (student.student != null) {
                     const clase = await this.classgroupService.getClassgroup(student.student.classgroup);
-                    if (guardado.state == 0 && areas.state == 0 && clase.state == 0) {
+                    if (guardado.state == 0  && clase.state == 0) {
+
+                        
                         return await this.generalAreaService.updateGeneralAreas(
                             new UpdateGeneralAreaRequest(
-                                areas.areaResults,
+                                guardado.areaResults,
                                 clase.classgroup.grado,
                                 student.student.genero)
                         );
@@ -67,12 +69,13 @@ export class SesionsController {
             const areaResponse = await this.areaResultService.createAreaResult(activities.activityResults, sesionId);
             if (areaResponse.state && areaResponse.state == 0) {
                 activities.activityResults.forEach(async element => {
-                    await this.activityService.deleteActivityResult(element.id);
+                   const delt = await this.activityService.deleteActivityResult(element.id);
+                   console.log(delt);
                 });
                 return areaResponse;
             }
             return areaResponse;
         }
-        return activities;
+        return new CreateAreaResultsResponse(1,null);
     }
 }
