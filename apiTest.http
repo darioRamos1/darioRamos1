@@ -39,6 +39,6 @@ PATCH {{url}}/sesions
 Content-Type: application/json
 
 {
-    "sesionId":"61265ef0b7fbd9002471fd22",
+    "sesionId":"61266c9fae2a14002418ba8a",
     "estado":true
 }
