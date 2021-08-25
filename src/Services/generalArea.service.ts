@@ -30,13 +30,13 @@ export class GeneralAreaService {
     async updateGeneralAreas(request: UpdateGeneralAreaRequest): Promise<DefaultResponse> {
         const areasGenerales: GeneralAreaTemp[] = [];
 
-        areasGenerales[0].area = 'Suma';
-        areasGenerales[1].area = 'Resta';
-        areasGenerales[2].area = 'Multiplicacion';
-        areasGenerales[3].area = 'Puntos';
-        areasGenerales[4].area = 'Lineas';
-        areasGenerales[5].area = 'Recta numérica';
-        areasGenerales[6].area = 'Número Mayor';
+        areasGenerales[0] = new GeneralAreaTemp('Suma', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[1] = new GeneralAreaTemp('Resta', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[2] = new GeneralAreaTemp('Multiplicación', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[3] = new GeneralAreaTemp('Puntos', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[4] = new GeneralAreaTemp('Lineas', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[5] = new GeneralAreaTemp('Recta numérica', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
+        areasGenerales[6] = new GeneralAreaTemp('Número Mayor', request.grado, request.genero, 0, 0, 0, 0, 0, 0, 0);
 
         //hallar la media de cada area
         request.areaResults.forEach(areaObj => {
@@ -48,54 +48,59 @@ export class GeneralAreaService {
                 }
             });
         });
-
+        areasGenerales.forEach(areaGen => {
+            if (areaGen.numero > 0) {
+                areaGen.media = areaGen.total / areaGen.numero;
+                areaGen.tiempo = areaGen.tiempoTotal / areaGen.numero;
+            }
+        });
         //desviacion tipica
         request.areaResults.forEach(areaObj => {
             areasGenerales.forEach(areaGen => {
-                if (areaObj.area == areaGen.area) {
-                    areaGen.sumaDt += Math.pow(areaObj.resultado - areaGen.media, 2);
+                if (areaGen.numero > 0) {
+                    if (areaObj.area == areaGen.area) {
+                        areaGen.sumaDt += Math.pow(areaObj.resultado - areaGen.media, 2);
+                    }
                 }
             });
         });
 
         areasGenerales.forEach(areaGen => {
-            areaGen.genero = request.genero;
-            areaGen.grado = request.grado;
-            areaGen.media = areaGen.total / areaGen.numero;
-            areaGen.tiempo = areaGen.tiempoTotal / areaGen.numero;
             areaGen.dt = Math.sqrt(areaGen.sumaDt / areaGen.numero);
         });
 
         //registrar el area general
         areasGenerales.forEach(async areaGen => {
-            const generalArea = await this.generalAreaModel.findOne({ area: areaGen.area, grado: request.grado, genero: request.genero },
-                function (err, generalArea) {
-                    if (err) {
-                        return null;
-                    }
-                    return generalArea;
-                });
+            if (areaGen.numero > 0) {
+                const generalArea = await this.generalAreaModel.findOne({ area: areaGen.area, grado: request.grado, genero: request.genero },
+                    function (err, generalArea) {
+                        if (err) {
+                            return null;
+                        }
+                        return generalArea;
+                    });
 
-            if (generalArea == null) {
-                const newGeneralArea = new this.generalAreaModel({
-                    area: areaGen.area,
-                    media: areaGen.media,
-                    dt: areaGen.dt,
-                    grado: areaGen.grado,
-                    genero: areaGen.genero,
-                    tiempo: areaGen.tiempo,
-                    numero: areaGen.numero,
-                });
-                await newGeneralArea.save();
-            } else {
-                generalArea.area = areaGen.area;
-                generalArea.media = areaGen.media;
-                generalArea.dt = areaGen.dt;
-                generalArea.grado = areaGen.grado;
-                generalArea.genero = areaGen.genero;
-                generalArea.tiempo = areaGen.tiempo;
-                generalArea.numero = areaGen.numero;
-                await generalArea.save();
+                if (generalArea == null) {
+                    const newGeneralArea = new this.generalAreaModel({
+                        area: areaGen.area,
+                        media: areaGen.media,
+                        dt: areaGen.dt,
+                        grado: areaGen.grado,
+                        genero: areaGen.genero,
+                        tiempo: areaGen.tiempo,
+                        numero: areaGen.numero,
+                    });
+                    await newGeneralArea.save();
+                } else {
+                    generalArea.area = areaGen.area;
+                    generalArea.media = areaGen.media;
+                    generalArea.dt = areaGen.dt;
+                    generalArea.grado = areaGen.grado;
+                    generalArea.genero = areaGen.genero;
+                    generalArea.tiempo = areaGen.tiempo;
+                    generalArea.numero = areaGen.numero;
+                    await generalArea.save();
+                }
             }
         });
 
@@ -128,17 +133,21 @@ export class GeneralAreaService {
     }
 
 }
-export interface GeneralAreaTemp {
-    area: string,
-    total: number,
-    tiempoTotal: number,
-    sumaDt: number,
-    media: number,
-    dt: number,
-    grado: number,
-    genero: string,
-    tiempo: number,
-    numero: number,
+export class GeneralAreaTemp {
+
+    constructor(
+        public area: string,
+        public grado: number,
+        public genero: string,
+        public total: number,
+        public tiempoTotal: number,
+        public sumaDt: number,
+        public media: number,
+        public dt: number,
+        public tiempo: number,
+        public numero: number,) {
+    }
+
 }
 
 export class SearchGeneralAreaResponse {

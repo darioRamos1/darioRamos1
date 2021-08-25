@@ -33,3 +33,12 @@ Content-Type: application/json
     "name":"classtest",
     "teacher":"juanita"
 }
+
+### PATCH sesion
+PATCH {{url}}/sesions
+Content-Type: application/json
+
+{
+    "sesionId":"61265ef0b7fbd9002471fd22",
+    "estado":true
+}
