@@ -15,18 +15,18 @@ export class SesionsController {
         private generalAreaService: GeneralAreaService,
         private studentService: StudentService,
         private classgroupService: ClassgroupService
-        ) { }
+    ) { }
     @Post()
     async addSesion(@Body() request: RegisterSesionRequest) {
         const response = await this.sesionService.insertSesion(request);
         //cuando acabe el test actualizo los resultados generales, se necesita el genero y el grado
-        if(request.estado==true){
+        if (request.tipo == 0) {
             const guardado = await this.guardarAreaResults(response.sesionId);
             const areas = await this.areaResultService.getSesionAreaResults(response.sesionId);
             const student = await this.studentService.getStudent(request.student);
-            if(student.student!=null){
+            if (student.student != null) {
                 const clase = await this.classgroupService.getClassgroup(student.student.classgroup);
-                if(guardado.state ==0 && areas.state==0 && clase.state==0){
+                if (guardado.state == 0 && areas.state == 0 && clase.state == 0) {
                     return await this.generalAreaService.updateGeneralAreas(
                         new UpdateGeneralAreaRequest(
                             areas.areaResults,
@@ -34,7 +34,7 @@ export class SesionsController {
                             student.student.genero)
                     );
                 }
-                return new DefaultResponse(1,"error en lectura datos");
+                return new DefaultResponse(1, "error en lectura datos");
             }
             return student;
         }
@@ -62,7 +62,7 @@ export class SesionsController {
         return response;
     }
 
-    async guardarAreaResults(sesionId: string){
+    async guardarAreaResults(sesionId: string) {
         const activities = await this.activityService.getSesionActivityResults(sesionId);
         if (activities.state == 0) {
             const areaResponse = await this.areaResultService.createAreaResult(activities.activityResults, sesionId);
