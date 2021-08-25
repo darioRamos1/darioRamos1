@@ -18,27 +18,7 @@ export class SesionsController {
     ) { }
     @Post()
     async addSesion(@Body() request: RegisterSesionRequest) {
-        const response = await this.sesionService.insertSesion(request);
-        //cuando acabe el test actualizo los resultados generales, se necesita el genero y el grado
-        if (request.tipo == 0) {
-            const guardado = await this.guardarAreaResults(response.sesionId);
-            const areas = await this.areaResultService.getSesionAreaResults(response.sesionId);
-            const student = await this.studentService.getStudent(request.student);
-            if (student.student != null) {
-                const clase = await this.classgroupService.getClassgroup(student.student.classgroup);
-                if (guardado.state == 0 && areas.state == 0 && clase.state == 0) {
-                    return await this.generalAreaService.updateGeneralAreas(
-                        new UpdateGeneralAreaRequest(
-                            areas.areaResults,
-                            clase.classgroup.grado,
-                            student.student.genero)
-                    );
-                }
-                return new DefaultResponse(1, "error en lectura datos");
-            }
-            return student;
-        }
-        return response;
+        return await this.sesionService.insertSesion(request);
     }
 
     @Get('student/:id')
@@ -52,12 +32,31 @@ export class SesionsController {
         return await this.sesionService.deleteSesion(sesionId);
     }
 
+    //cuando acabe el test actualizo los resultados generales, se necesita el genero y el grado
     @Patch()
     async updateSesion(@Body() request: UpdateSesionRequest) {
 
         const response = await this.sesionService.updateSesion(request);
         if (response.state == 0) {
-            return await this.guardarAreaResults(request.sesionId);
+            const guardado = await this.guardarAreaResults(response.sesion.id);
+            if (response.sesion.tipo == 0 && request.estado == true) {
+                const areas = await this.areaResultService.getSesionAreaResults(response.sesion.id);
+                const student = await this.studentService.getStudent(response.sesion.student);
+                if (student.student != null) {
+                    const clase = await this.classgroupService.getClassgroup(student.student.classgroup);
+                    if (guardado.state == 0 && areas.state == 0 && clase.state == 0) {
+                        return await this.generalAreaService.updateGeneralAreas(
+                            new UpdateGeneralAreaRequest(
+                                areas.areaResults,
+                                clase.classgroup.grado,
+                                student.student.genero)
+                        );
+                    }
+                    return new DefaultResponse(1, "error en lectura datos");
+                }
+                return student;
+            }
+            return guardado;
         }
         return response;
     }

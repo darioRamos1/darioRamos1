@@ -36,20 +36,20 @@ export class SesionService {
         return new SearchAllSesionsResponse(state, sesions);
     }
 
-    async updateSesion(request: UpdateSesionRequest): Promise<DefaultResponse> {
+    async updateSesion(request: UpdateSesionRequest): Promise<UpdateSesionResponse> {
         const updatedSesion = await this.sesionModel.findOne({ _id: request.sesionId }, function (err) {
             if (err) {
-                return new DefaultResponse(1, "Error", '');
+                return undefined;
             }
         });
         if (updatedSesion != undefined) {
             updatedSesion.estado = request.estado;
         } else {
-            return new DefaultResponse(1, 'No se encontro la sesion', request.sesionId);
+            return new UpdateSesionResponse(1,  null);
         }
 
         await updatedSesion.save();
-        return new DefaultResponse(0, 'Sesion modificada con exito', updatedSesion.id);
+        return new UpdateSesionResponse(0, updatedSesion);
     }
 
     async deleteSesion(sesionId: string): Promise<DefaultResponse> {
@@ -94,7 +94,14 @@ export class RegisterSesionRequest {
 export class UpdateSesionRequest {
     constructor(
         public sesionId: string,
-        public estado: boolean
+        public estado: boolean,
+    ) { }
+}
+
+export class UpdateSesionResponse {
+    constructor(
+        public state: number,
+        public sesion: Sesion,
     ) { }
 }
 export class DefaultResponse {
