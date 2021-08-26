@@ -51,7 +51,7 @@ export class SesionsController {
                             new UpdateGeneralAreaRequest(
                                 guardado.areaResults,
                                 clase.classgroup.grade,
-                                student.student.genero)
+                                student.student.gender)
                         );
                     }
                     return new DefaultResponse(1, "error en lectura datos");

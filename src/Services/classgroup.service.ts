@@ -19,6 +19,7 @@ export class ClassgroupService{
         const newClassgroup = new this.classgroupModel({
             name:request.name,
             code:codigo,
+            grade:request.grade,
             teacher:request.teacher
         }
         );
@@ -86,7 +87,10 @@ export class ClassgroupService{
                 updatedClassgroup.name = request.name;
             }
             if(request.teacher){
-                updatedClassgroup.teacher = request.teacher
+                updatedClassgroup.teacher = request.teacher;
+            }
+            if(request.grade){
+                updatedClassgroup.grade = request.grade;
             }
            
         }else{
@@ -132,6 +136,7 @@ export class RegisterClassgroupRequest{
     constructor(
         public name:string,
         public teacher:string,
+        public grade:number,
     ){}
 }
 
@@ -139,7 +144,8 @@ export class UpdateClassgroupRequest{
 
     constructor(
         public name:string,
-        public teacher:string
+        public teacher:string,
+        public grade:number
     ){}
 }
 

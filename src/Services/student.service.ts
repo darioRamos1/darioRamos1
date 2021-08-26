@@ -14,6 +14,7 @@ export class StudentService{
             name:request.name,
             age:request.age,
             userId:request.userId,
+            gender: request.gender,
             password:request.password,
             classgroup:request.classgroup
         }
@@ -84,6 +85,9 @@ export class StudentService{
             if(request.password){
                 updatedStudent.password = request.password;
             }
+            if(request.gender){
+                updatedStudent.gender = request.gender;
+            }
             if(request.userId){
                 updatedStudent.userId = request.userId;
             }
@@ -137,6 +141,7 @@ export class RegisterStudentRequest{
         public age:number,
         public userId:string,
         public password:string,
+        public gender:string,
         public classgroup?:string,
     ){}
 }
@@ -155,6 +160,7 @@ export class UpdateStudentRequest{
         public age:number,
         public userId:string,
         public password:string,
+        public gender:string,
         public classgroup?:string,
     ){}
 }
