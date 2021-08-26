@@ -50,7 +50,7 @@ export class SesionsController {
                         return await this.generalAreaService.updateGeneralAreas(
                             new UpdateGeneralAreaRequest(
                                 guardado.areaResults,
-                                clase.classgroup.grado,
+                                clase.classgroup.grade,
                                 student.student.genero)
                         );
                     }

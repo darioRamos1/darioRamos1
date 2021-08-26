@@ -4,12 +4,12 @@ export const ClassgroupSchema = new mongoose.Schema({
   name: String,
   code: String,
   teacher: String,
-  grado: Number,
+  grade: Number,
 });
 
 export interface Classgroup extends mongoose.Document{
     name: string,
     code: string,
     teacher: string,
-    grado: number,
+    grade: number,
 }
