@@ -11,7 +11,7 @@ GET {{url}}/teachers HTTP/1.1
 GET {{url}}/classgroups/teacher/Eli HTTP/1.1
 
 ### GET area result
-GET {{url}}/areaResult/sesion/6121b6f5234fb600233d3b6e HTTP/1.1
+GET {{url}}/areaResult/sesion/6127b1286550330024117f5e HTTP/1.1
 
 ### GET sessions of student
 GET {{url}}/sesions/student/yy HTTP/1.1
@@ -41,4 +41,49 @@ Content-Type: application/json
 {
     "sesionId":"61266c9fae2a14002418ba8a",
     "estado":true
+}
+
+### POST classgroup
+POST {{url}}/generalArea
+Content-Type: application/json
+
+{
+ "results": [
+    {
+      "_id": "6127b12b6550330024117f6f",
+      "sesionId": "6127b1286550330024117f5e",
+      "area": "Puntos",
+      "resultado": 2,
+      "tiempo": 5.454000000000001,
+      "preguntas": 2,
+      "__v": 0
+    },
+    {
+      "_id": "6127b12b6550330024117f71",
+      "sesionId": "6127b1286550330024117f5e",
+      "area": "Número Mayor",
+      "resultado": 2,
+      "tiempo": 5.008,
+      "preguntas": 2,
+      "__v": 0
+    },
+    {
+      "_id": "6127b12b6550330024117f6d",
+      "sesionId": "6127b1286550330024117f5e",
+      "area": "Recta numérica",
+      "resultado": 2,
+      "tiempo": 12.989,
+      "preguntas": 2,
+      "__v": 0
+    },
+    {
+      "_id": "6127b12b6550330024117f67",
+      "sesionId": "6127b1286550330024117f5e",
+      "area": "Suma",
+      "resultado": 1,
+      "tiempo": 11.913,
+      "preguntas": 2,
+      "__v": 0
+    }
+  ]
 }

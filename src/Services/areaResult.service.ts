@@ -81,8 +81,7 @@ export class AreaResultService {
                 }
                 return areaResultes;
             });
-        console.log("areas::::");
-        console.log(areaResults);
+
         return new SearchAllAreaResponse(state, areaResults);
     }
 

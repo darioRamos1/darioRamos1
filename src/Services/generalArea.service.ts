@@ -108,6 +108,40 @@ export class GeneralAreaService {
         return new DefaultResponse(0, "Areas generales actualizadas");
     }
 
+    async compareGeneralArea(request: CompareGeneralAreaResultRequest): Promise<DefaultResponse>{
+
+        let dt1 = 0;
+        let dt2 = 0;
+        //Si hay 3 areas por debajo de 1.5dt o si hay una por debajo de 2dt entonces hay riesgo
+        request.results.forEach(async areaRes => {
+            const generalArea = await this.generalAreaModel.findOne({ area: areaRes.area, grado: request.grade, genero: request.gender },
+                function (err, generalArea) {
+                    if (err) {
+                        return null;
+                    }
+                    return generalArea;
+                });
+
+            if(generalArea){
+                const limite1 = generalArea.media - (generalArea.dt *1.5);
+                const limite2 = generalArea.media - (generalArea.dt *2);
+                if(areaRes.resultado < limite2){
+                    dt2+=1;
+                }else if(areaRes.resultado < limite1){
+                    dt1+=1;
+                }
+            }else{
+                return null;
+            }
+        });
+
+        if(dt1 >= 3 || dt2>0){
+            return new DefaultResponse(0,"Alto");
+        }else{
+            return new DefaultResponse(0,"Bajo");
+        }
+        
+    }
 
     async getGeneralArea(area: string): Promise<SearchGeneralAreaResponse> {
         let state = 0;
@@ -133,6 +167,13 @@ export class GeneralAreaService {
         }
     }
 
+}
+export class CompareGeneralAreaResultRequest{
+    constructor(
+        public results: AreaResult[],
+        public gender: string,
+        public grade: number
+    ){}
 }
 export class GeneralAreaTemp {
 

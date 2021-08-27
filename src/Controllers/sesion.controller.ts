@@ -67,13 +67,13 @@ export class SesionsController {
         const activities = await this.activityService.getSesionActivityResults(sesionId);
         if (activities.state == 0) {
             const areaResponse = await this.areaResultService.createAreaResult(activities.activityResults, sesionId);
-            if (areaResponse.state && areaResponse.state == 0) {
-                activities.activityResults.forEach(async element => {
-                   const delt = await this.activityService.deleteActivityResult(element.id);
-                   console.log(delt);
-                });
-                return areaResponse;
-            }
+            // if (areaResponse.state && areaResponse.state == 0) {
+            //     activities.activityResults.forEach(async element => {
+            //        const delt = await this.activityService.deleteActivityResult(element.id);
+            //        console.log(delt);
+            //     });
+            //     return areaResponse;
+            // }
             return areaResponse;
         }
         return new CreateAreaResultsResponse(1,null);
