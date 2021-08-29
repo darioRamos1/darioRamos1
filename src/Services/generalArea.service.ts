@@ -3,11 +3,18 @@ import { GeneralArea } from "../Models/generalArea.model";
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose'
 import { AreaResult } from "src/Models/areaResult.model";
+import { Student } from "src/Models/student.model";
+import { Classgroup } from "src/Models/classgroup.model";
 
 @Injectable()
 export class GeneralAreaService {
 
-    constructor(@InjectModel('GeneralArea') private readonly generalAreaModel: Model<GeneralArea>,) { }
+    constructor(
+        @InjectModel('GeneralArea') private readonly generalAreaModel: Model<GeneralArea>,
+        @InjectModel('AreaResult') private readonly areaResultModel: Model<AreaResult>,
+        @InjectModel('Student') private readonly studentModel: Model<Student>,
+        @InjectModel('Classgroup') private readonly classgroupModel: Model<Classgroup>,
+    ) { }
 
     async insertGeneralArea(request: RegisterGeneralAreaRequest): Promise<DefaultResponse> {
 
@@ -108,39 +115,76 @@ export class GeneralAreaService {
         return new DefaultResponse(0, "Areas generales actualizadas");
     }
 
-    async compareGeneralArea(request: CompareGeneralAreaResultRequest): Promise<DefaultResponse>{
+    async compareGeneralArea(request: CompareGeneralAreaResultRequest): Promise<CompareGeneralAreaResultResponse> {
 
         let dt1 = 0;
         let dt2 = 0;
-        //Si hay 3 areas por debajo de 1.5dt o si hay una por debajo de 2dt entonces hay riesgo
-        request.results.forEach(async areaRes => {
-            const generalArea = await this.generalAreaModel.findOne({ area: areaRes.area, grado: request.grade, genero: request.gender },
-                function (err, generalArea) {
-                    if (err) {
-                        return null;
-                    }
-                    return generalArea;
-                });
 
-            if(generalArea){
-                const limite1 = generalArea.media - (generalArea.dt *1.5);
-                const limite2 = generalArea.media - (generalArea.dt *2);
-                if(areaRes.resultado < limite2){
-                    dt2+=1;
-                }else if(areaRes.resultado < limite1){
-                    dt1+=1;
+        const areaResults = await this.areaResultModel.find({ sesionId: request.sesionId },
+            function (err, areaResultes) {
+                if (err) {
+                    return [];
                 }
-            }else{
-                return null;
-            }
-        });
+                return areaResultes;
+            });
 
-        if(dt1 >= 3 || dt2>0){
-            return new DefaultResponse(0,"Alto");
+        if(request.inicial){
+            const student = await this.studentModel.findOne({ _id: request.student },
+                function (err, student) {
+                    if (err) {
+                        return undefined;
+                    }
+                    return student;
+                });
+    
+            if (student != undefined) {
+                const classgroup = await this.classgroupModel.findOne({ _id: student.classgroup },
+                    function (err, classgroup) {
+                        if (err) {
+                            return undefined;
+                        }
+                        return classgroup;
+                    });
+                 //Si hay 3 areas por debajo de 1.5dt o si hay una por debajo de 2dt entonces hay riesgo
+                if (classgroup != undefined) {
+                    if (areaResults.length > 0) {
+                        areaResults.forEach(async areaRes => {
+                            const generalArea = await this.generalAreaModel.findOne({ area: areaRes.area, grado: classgroup.grade, genero: student.gender },
+                                function (err, generalArea) {
+                                    if (err) {
+                                        return null;
+                                    }
+                                    return generalArea;
+                                });
+    
+                            if (generalArea) {
+                                const limite1 = generalArea.media - (generalArea.dt * 1.5);
+                                const limite2 = generalArea.media - (generalArea.dt * 2);
+                                if (areaRes.resultado < limite2) {
+                                    dt2 += 1;
+                                } else if (areaRes.resultado < limite1) {
+                                    dt1 += 1;
+                                }
+                            } else {
+                                return null;
+                            }
+                        });
+    
+                        if (dt1 >= 3 || dt2 > 0) {
+                            return new CompareGeneralAreaResultResponse(0,'Alto',areaResults);
+                        } else {
+                            return new CompareGeneralAreaResultResponse(0,'Bajo',areaResults);
+                        }
+                    }
+                }
+            }
         }else{
-            return new DefaultResponse(0,"Bajo");
+
+            return new CompareGeneralAreaResultResponse(0,'',areaResults);
         }
-        
+
+
+
     }
 
     async getGeneralArea(area: string): Promise<SearchGeneralAreaResponse> {
@@ -168,12 +212,20 @@ export class GeneralAreaService {
     }
 
 }
-export class CompareGeneralAreaResultRequest{
+export class CompareGeneralAreaResultRequest {
     constructor(
-        public results: AreaResult[],
-        public gender: string,
-        public grade: number
-    ){}
+        public sesionId: string,
+        public student: string,
+        public inicial: boolean
+    ) { }
+}
+
+export class CompareGeneralAreaResultResponse {
+    constructor(
+        public state: number,
+        public test: string,
+        public areaResults: AreaResult[],
+    ) { }
 }
 export class GeneralAreaTemp {
 
@@ -222,11 +274,10 @@ export class RegisterGeneralAreaRequest {
     ) { }
 }
 
-export class DefaultResponse {
+export class DefaultResponse{
     constructor(
-        public state: number,
-        public message: string
-    ) { }
+        public state:number,
+        public message:string
+    ){}
 }
-
 
