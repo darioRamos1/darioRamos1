@@ -129,7 +129,7 @@ export class GeneralAreaService {
             });
 
         if(request.inicial){
-            const student = await this.studentModel.findOne({ _id: request.student },
+            const student = await this.studentModel.findOne({ userId: request.student },
                 function (err, student) {
                     if (err) {
                         return undefined;
@@ -138,7 +138,7 @@ export class GeneralAreaService {
                 });
     
             if (student != undefined) {
-                const classgroup = await this.classgroupModel.findOne({ _id: student.classgroup },
+                const classgroup = await this.classgroupModel.findOne({ code: student.classgroup },
                     function (err, classgroup) {
                         if (err) {
                             return undefined;
@@ -175,15 +175,13 @@ export class GeneralAreaService {
                         } else {
                             return new CompareGeneralAreaResultResponse(0,'Bajo',areaResults);
                         }
-                    }
-                }
+                    }return new CompareGeneralAreaResultResponse(1,'',[]);
+                } return new CompareGeneralAreaResultResponse(1,'',[]);
             }
+            return new CompareGeneralAreaResultResponse(1,'',[]);
         }else{
-
             return new CompareGeneralAreaResultResponse(0,'',areaResults);
         }
-
-
 
     }
 
