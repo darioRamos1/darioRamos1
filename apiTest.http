@@ -1,6 +1,6 @@
 @localurl = http://localhost:3000
 @herokurul = https://discalproyect.herokuapp.com
-@url = {{localurl}}
+@url = {{herokurul}}
 
 ### Get students from class
 GET {{url}}/students/classgroup/ZBSI HTTP/1.1
@@ -48,7 +48,7 @@ POST {{url}}/generalArea
 Content-Type: application/json
 
 {
- "sesionId": "612c0b222c8e5e00241ef63f",
- "student":"cc",
- "inicial":true
+ "sesionId": "613fb6e2f4f5f800244bd07e",
+ "student":"pp",
+ "inicial":false
 }
