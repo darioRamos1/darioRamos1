@@ -43,6 +43,9 @@ export class SesionService {
             }
         });
         if (updatedSesion != undefined) {
+            if(updatedSesion.estado == request.estado){
+                return new UpdateSesionResponse(1,  null);
+            }
             updatedSesion.estado = request.estado;
         } else {
             return new UpdateSesionResponse(1,  null);
